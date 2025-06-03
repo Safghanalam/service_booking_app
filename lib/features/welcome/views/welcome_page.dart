@@ -28,34 +28,41 @@ class WelcomePage extends StatelessWidget {
                         fit: BoxFit.fitHeight,
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 40),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           "Need a Haircut?",
-                          style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.primary,
-                          ),
+                          style: Theme.of(context).textTheme.displayMedium
+                              ?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.primary,
+                                fontSize: 36,
+                              ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 60),
+                    const SizedBox(height: 50),
                     Text(
                       "Book an Appointment",
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.primary,
-                      ),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primary,
+                          ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 20,
+                      ),
                       child: Text(
                         "Use our application to book an appointment",
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.w500,
                           color: AppColors.primary,
+                          fontSize: 18,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -64,7 +71,7 @@ class WelcomePage extends StatelessWidget {
                 ),
               ),
               // 🔽 Bottom Button
-              ButtonPrimary()
+              ButtonPrimary(),
             ],
           ),
         ),

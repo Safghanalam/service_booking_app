@@ -9,7 +9,7 @@ class AppColors {
 
   // Button Colors
   static const Color buttonSecondaryColor = Color.fromRGBO(189, 189, 189, 1);
-    
+
   // Status Colors
   static const Color success = Color(0xFF4CAF50);
   static const Color warning = Color(0xFFFFC107);
