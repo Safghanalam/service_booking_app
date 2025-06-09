@@ -52,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
           },
           child: Image.asset(
             'assets/images/urban.png',
-            width: 200,
+            width: 400,
           ),
         ),
       ),
