@@ -36,7 +36,8 @@ class _RegisterState extends State<Login> {
       appBar: AppBar(
         title: const Text(
           'Login',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
         // Page title
         leading: BackButton(), // Optional: default back button is auto-shown
@@ -44,34 +45,45 @@ class _RegisterState extends State<Login> {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(0, 80, 0, 0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(80),
-                child: Image.asset(
-                  "assets/images/urban.png",
-                  width: 250,
-                  height: 250,
-                  fit: BoxFit.fitHeight,
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(80),
+                  child: Image.asset(
+                    "assets/images/login.png",
+                    width: 200,
+                    height: 200,
+                  ),
                 ),
-              ),
+                SizedBox(height: 35),
+                Text(
+                  'Welcom back!',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                ),
+                SizedBox(height: 40),
+                CustomTextField(hintText: "Mobile Number", icon: Icons.phone_android, controller: emailController),
+                SizedBox(height: 20),
+                CustomTextField(
+                  hintText: "Password",
+                  icon: Icons.password,
+                  isPasswordField: true,
+                  controller: passwordController,
+                ),
+                SizedBox(height: 15),
+                Text(
+                  'Forgot Password?',
+                  style: TextStyle(fontWeight: FontWeight.normal),
+                ),
+                SizedBox(height: 40),
+                ButtonPrimary(
+                  onPressed: _submit,
+                  text: "Login",
+                ),
+              ],
             ),
-            CustomTextField(hintText: "Email", icon: Icons.email, controller: emailController),
-            SizedBox(height: 20),
-            CustomTextField(
-              hintText: "Password",
-              icon: Icons.password,
-              isPasswordField: true,
-              controller: passwordController,
-            ),
-            SizedBox(height: 40),
-            ButtonPrimary(
-              onPressed: _submit,
-              text: "Submit",
-            ),
-            SizedBox(height: 15),
             GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -79,24 +91,26 @@ class _RegisterState extends State<Login> {
                   MaterialPageRoute(builder: (context) => const Register()),
                 );
               },
-              child: Text.rich(
-                TextSpan(
-                  text: "Don't have an account? ",
-                  style: TextStyle(fontWeight: FontWeight.normal),
-                  children: [
-                    TextSpan(
-                      text: 'Sign up',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    TextSpan(
-                      text: ' now.',
-                      style: TextStyle(fontWeight: FontWeight.normal),
-                    ),
-                  ],
+              child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
+                child: Text.rich(
+                  TextSpan(
+                    text: "Don't have an account? ",
+                    style: TextStyle(fontWeight: FontWeight.normal, fontSize: 15),
+                    children: [
+                      TextSpan(
+                        text: 'Sign up',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      ),
+                      TextSpan(
+                        text: ' now.',
+                        style: TextStyle(fontWeight: FontWeight.normal, fontSize: 15),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             )
-
           ],
         ),
       ),

@@ -3,6 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {
-    return ThemeData(textTheme: GoogleFonts.interTextTheme());
+    return ThemeData(textTheme: GoogleFonts.poppinsTextTheme());
   }
 }

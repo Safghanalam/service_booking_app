@@ -13,14 +13,12 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
 
   final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   @override
   void dispose() {
     firstNameController.dispose();
-    lastNameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -29,7 +27,6 @@ class _RegisterState extends State<Register> {
   void _submit() {
     if (kDebugMode) {
       print("First Name: ${firstNameController.text}");
-      print("Last Name: ${lastNameController.text}");
       print("Email: ${emailController.text}");
       print("Password: ${passwordController.text}");
     }
@@ -41,45 +38,50 @@ class _RegisterState extends State<Register> {
       appBar: AppBar(
         title: const Text(
           'Register',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
         // Page title
         leading: BackButton(), // Optional: default back button is auto-shown
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ClipRRect(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(80),
                 child: Image.asset(
-                  "assets/images/urban.png",
-                  width: 250,
-                  height: 250,
-                  fit: BoxFit.fitHeight,
+                  "assets/images/signup.png",
+                  width: 200,
+                  height: 200,
                 ),
               ),
-              CustomTextField(hintText: "First Name", icon: Icons.person, controller: firstNameController,),
-              SizedBox(height: 20),
-              CustomTextField(hintText: "Last Name", icon: Icons.person, controller: lastNameController,),
-              SizedBox(height: 20),
-              CustomTextField(hintText: "Email", icon: Icons.email, controller: emailController,),
-              SizedBox(height: 20),
-              CustomTextField(
-                hintText: "Password",
-                icon: Icons.password,
-                isPasswordField: true,
-                controller: passwordController,
-              ),
-              SizedBox(height: 50),
-              ButtonPrimary(
-                onPressed: _submit,
-                text: "Submit",
-              ),
-            ],
-          ),
+            ),
+            SizedBox(height: 45),
+            Text(
+              'Hello! Register here to get started',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+            ),
+            SizedBox(height: 40),
+            CustomTextField(hintText: "Full Name", icon: Icons.person, controller: firstNameController,),
+            SizedBox(height: 20),
+            CustomTextField(hintText: "Mobile Number", icon: Icons.phone_android, controller: emailController,),
+            SizedBox(height: 20),
+            CustomTextField(
+              hintText: "Set Password",
+              icon: Icons.password,
+              isPasswordField: true,
+              controller: passwordController,
+            ),
+            SizedBox(height: 40),
+            ButtonPrimary(
+              onPressed: _submit,
+              text: "Verify Otp",
+            ),
+          ],
         ),
       ),
     );
