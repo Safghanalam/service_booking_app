@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:service_booking_app_new/core/constants/app_colors.dart';
+import 'package:service_booking_app_new/features/auth/views/login.dart';
 import 'package:service_booking_app_new/features/auth/views/register.dart';
 import '../../../shared/widgets/button_primary.dart';
 import 'dart:io'; // For exit(0)
@@ -12,7 +13,7 @@ class WelcomePage extends StatelessWidget {
   void navigateToSecondPage(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const Register()),
+      MaterialPageRoute(builder: (context) => const Login()),
     );
   }
 
@@ -33,7 +34,7 @@ class WelcomePage extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(150),
                       child: Image.asset(
-                        "assets/images/welcome.jpg",
+                        "assets/images/register.jpeg",
                         width: 300,
                         height: 300,
                         fit: BoxFit.fitHeight,
