@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:service_booking_app_new/shared/widgets/button_primary.dart';
 import 'package:service_booking_app_new/shared/widgets/custom_text_field.dart';
+import 'package:service_booking_app_new/features/auth/views/otp.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -11,7 +11,6 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -22,14 +21,6 @@ class _RegisterState extends State<Register> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
-  }
-
-  void _submit() {
-    if (kDebugMode) {
-      print("First Name: ${firstNameController.text}");
-      print("Email: ${emailController.text}");
-      print("Password: ${passwordController.text}");
-    }
   }
 
   @override
@@ -66,9 +57,17 @@ class _RegisterState extends State<Register> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
             ),
             SizedBox(height: 40),
-            CustomTextField(hintText: "Full Name", icon: Icons.person, controller: firstNameController,),
+            CustomTextField(
+              hintText: "Full Name",
+              icon: Icons.person,
+              controller: firstNameController,
+            ),
             SizedBox(height: 20),
-            CustomTextField(hintText: "Mobile Number", icon: Icons.phone_android, controller: emailController,),
+            CustomTextField(
+              hintText: "Mobile Number",
+              icon: Icons.phone_android,
+              controller: emailController,
+            ),
             SizedBox(height: 20),
             CustomTextField(
               hintText: "Set Password",
@@ -78,8 +77,13 @@ class _RegisterState extends State<Register> {
             ),
             SizedBox(height: 40),
             ButtonPrimary(
-              onPressed: _submit,
               text: "Verify Otp",
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Otp()),
+                );
+              },
             ),
           ],
         ),

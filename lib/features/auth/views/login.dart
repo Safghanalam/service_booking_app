@@ -12,7 +12,6 @@ class Login extends StatefulWidget {
 }
 
 class _RegisterState extends State<Login> {
-
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -64,7 +63,11 @@ class _RegisterState extends State<Login> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                 ),
                 SizedBox(height: 40),
-                CustomTextField(hintText: "Mobile Number", icon: Icons.phone_android, controller: emailController),
+                CustomTextField(
+                  hintText: "Mobile Number",
+                  icon: Icons.phone_android,
+                  controller: emailController,
+                ),
                 SizedBox(height: 20),
                 CustomTextField(
                   hintText: "Password",
@@ -78,10 +81,7 @@ class _RegisterState extends State<Login> {
                   style: TextStyle(fontWeight: FontWeight.normal),
                 ),
                 SizedBox(height: 40),
-                ButtonPrimary(
-                  onPressed: _submit,
-                  text: "Login",
-                ),
+                ButtonPrimary(onPressed: _submit, text: "Login"),
               ],
             ),
             GestureDetector(
@@ -96,21 +96,30 @@ class _RegisterState extends State<Login> {
                 child: Text.rich(
                   TextSpan(
                     text: "Don't have an account? ",
-                    style: TextStyle(fontWeight: FontWeight.normal, fontSize: 15),
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 15,
+                    ),
                     children: [
                       TextSpan(
                         text: 'Sign up',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
                       ),
                       TextSpan(
                         text: ' now.',
-                        style: TextStyle(fontWeight: FontWeight.normal, fontSize: 15),
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 15,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
