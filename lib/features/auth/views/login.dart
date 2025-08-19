@@ -1,31 +1,54 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:service_booking_app_new/features/auth/views/register.dart';
+import 'package:flutter/services.dart';
+import 'package:service_booking_app_new/core/constants/app_colors.dart';
+import 'package:service_booking_app_new/features/auth/views/otp.dart';
 import 'package:service_booking_app_new/shared/widgets/button_primary.dart';
-import 'package:service_booking_app_new/shared/widgets/custom_text_field.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
 
   @override
-  State<Login> createState() => _RegisterState();
+  State<Login> createState() => _LoginState();
 }
 
-class _RegisterState extends State<Login> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+class _LoginState extends State<Login> {
+  final TextEditingController phoneController = TextEditingController();
+  bool isPhoneEntered = false; // ✅ track phone number validity
+
+  @override
+  void initState() {
+    super.initState();
+    phoneController.addListener(_checkPhone); // listen for changes
+  }
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
+    phoneController.removeListener(_checkPhone);
+    phoneController.dispose();
     super.dispose();
   }
 
+  void _checkPhone() {
+    setState(() {
+      isPhoneEntered = phoneController.text.length == 10;
+    });
+  }
+
   void _submit() {
-    if (kDebugMode) {
-      print("Email: ${emailController.text}");
-      print("Password: ${passwordController.text}");
+    if (phoneController.text.length == 10) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Otp(
+            phoneNumber: phoneController.text,
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter a valid 10-digit number")),
+      );
     }
   }
 
@@ -38,85 +61,73 @@ class _RegisterState extends State<Login> {
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
-        // Page title
-        leading: BackButton(), // Optional: default back button is auto-shown
+        leading: const BackButton(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(80),
-                  child: Image.asset(
-                    "assets/images/login.png",
-                    width: 200,
-                    height: 200,
-                  ),
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 80, 0, 0),
+              child: ClipRRect(
+                child: Image.asset(
+                  "assets/images/login.png",
+                  width: 200,
+                  height: 200,
                 ),
-                SizedBox(height: 35),
-                Text(
-                  'Welcom back!',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-                ),
-                SizedBox(height: 40),
-                CustomTextField(
-                  hintText: "Mobile Number",
-                  icon: Icons.phone_android,
-                  controller: emailController,
-                ),
-                SizedBox(height: 20),
-                CustomTextField(
-                  hintText: "Password",
-                  icon: Icons.password,
-                  isPasswordField: true,
-                  controller: passwordController,
-                ),
-                SizedBox(height: 15),
-                Text(
-                  'Forgot Password?',
-                  style: TextStyle(fontWeight: FontWeight.normal),
-                ),
-                SizedBox(height: 40),
-                ButtonPrimary(onPressed: _submit, text: "Login"),
-              ],
+              ),
             ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Register()),
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
-                child: Text.rich(
-                  TextSpan(
-                    text: "Don't have an account? ",
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 15,
+            const SizedBox(height: 35),
+            const Text(
+              'Enter your phone number',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            const SizedBox(height: 30),
+
+            // Phone Number Input
+            TextField(
+              controller: phoneController,
+              keyboardType: TextInputType.phone,
+              cursorColor: AppColors.primary,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(10),
+              ],
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.primary, width: 1.5),
+                ),
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.primary, width: 1.5),
+                ),
+                hintText: "Enter your number",
+                prefix: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "+91",
+                      style: TextStyle(fontWeight: FontWeight.normal),
                     ),
-                    children: [
-                      TextSpan(
-                        text: 'Sign up',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                      ),
-                      TextSpan(
-                        text: ' now.',
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  ),
+                    const SizedBox(width: 6),
+                    Container(height: 22, width: 1, color: Colors.grey),
+                    const SizedBox(width: 6),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // ✅ Submit button (disabled until phone entered)
+            AbsorbPointer(
+              absorbing: !isPhoneEntered,
+              child: Opacity(
+                opacity: isPhoneEntered ? 1.0 : 0.5,
+                child: ButtonPrimary(
+                  onPressed: _submit,
+                  text: "Get OTP",
                 ),
               ),
             ),

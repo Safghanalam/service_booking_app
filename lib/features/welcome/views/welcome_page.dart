@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:service_booking_app_new/core/constants/app_colors.dart';
 import 'package:service_booking_app_new/features/auth/views/login.dart';
-import 'package:service_booking_app_new/features/auth/views/register.dart';
+import 'package:service_booking_app_new/features/Home/views/home.dart';
 import '../../../shared/widgets/button_primary.dart';
 import 'dart:io'; // For exit(0)
 import 'package:flutter/services.dart'; // For SystemNavigator.pop()
@@ -35,53 +35,43 @@ class WelcomePage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(150),
                       child: Image.asset(
                         "assets/images/register.jpeg",
-                        width: 300,
-                        height: 300,
+                        width: 280,
+                        height: 280,
                         fit: BoxFit.fitHeight,
                       ),
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 50),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "Need a Haircut?",
-                          style: Theme.of(context).textTheme.displayMedium
-                              ?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.primary,
-                                fontSize: 36,
-                              ),
+                        Expanded(
+                          child: Text(
+                            "Welcome to Urban Trim!",
+                            style: Theme.of(context).textTheme.displayMedium
+                                ?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primary,
+                              fontSize: 30,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 50),
                     Text(
-                      "Book an Appointment",
+                      "Need a Haircut? Book an Appointment",
                       style: Theme.of(context).textTheme.headlineSmall
                           ?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primary,
-                          ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 20,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.primary,
                       ),
-                      child: Text(
-                        "Use our application to book an appointment",
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.primary,
-                          fontSize: 18,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ],
                 ),
               ),
+
               // 🔽 Bottom Button
               ButtonPrimary(
                 onPressed: () => navigateToSecondPage(context),

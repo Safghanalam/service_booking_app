@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
   final String hintText;
-  final IconData icon;
   final bool isPasswordField;
   final TextEditingController controller;
+  final String prefixText;
 
 
   const CustomTextField({
     super.key,
     required this.hintText,
-    required this.icon,
     this.isPasswordField = false,
-    required this.controller,
+    required this.controller, required this.prefixText,
   });
 
   @override
@@ -35,7 +34,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         controller: widget.controller,
         obscureText: _isObscure,
         decoration: InputDecoration(
-          prefixIcon: Icon(widget.icon),
+          prefixText: widget.prefixText,
           hintText: widget.hintText,
           border: const OutlineInputBorder(),
           suffixIcon: IconButton(
@@ -50,7 +49,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
       return TextField(
         controller: widget.controller,
         decoration: InputDecoration(
-          prefixIcon: Icon(widget.icon),
           hintText: widget.hintText,
           border: const OutlineInputBorder(),
         ),

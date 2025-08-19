@@ -59,21 +59,17 @@ class _RegisterState extends State<Register> {
             SizedBox(height: 40),
             CustomTextField(
               hintText: "Full Name",
-              icon: Icons.person,
-              controller: firstNameController,
+              controller: firstNameController, prefixText: '',
             ),
             SizedBox(height: 20),
             CustomTextField(
               hintText: "Mobile Number",
-              icon: Icons.phone_android,
-              controller: emailController,
+              controller: emailController, prefixText: '',
             ),
             SizedBox(height: 20),
             CustomTextField(
               hintText: "Set Password",
-              icon: Icons.password,
-              isPasswordField: true,
-              controller: passwordController,
+              controller: passwordController, prefixText: '',
             ),
             SizedBox(height: 40),
             ButtonPrimary(
@@ -81,7 +77,7 @@ class _RegisterState extends State<Register> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Otp()),
+                  MaterialPageRoute(builder: (context) => const Otp(phoneNumber: '',)),
                 );
               },
             ),
