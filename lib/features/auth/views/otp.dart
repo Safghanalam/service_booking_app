@@ -49,7 +49,7 @@ class _OtpState extends State<Otp> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Otp Verificatio',
+          'Otp Verification',
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
