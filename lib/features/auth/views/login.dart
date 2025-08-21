@@ -59,9 +59,9 @@ class _LoginState extends State<Login> {
         title: const Text(
           'Login',
           textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: AppColors.primary),
         ),
-        leading: const BackButton(),
+        leading: const BackButton(color: AppColors.primary),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),

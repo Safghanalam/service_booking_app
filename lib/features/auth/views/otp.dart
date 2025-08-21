@@ -31,7 +31,7 @@ class _OtpState extends State<Otp> {
       // ✅ Navigate only if OTP matches
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Register()),
+        MaterialPageRoute(builder: (context) => const Home()),
       );
     } else {
       // ❌ Show error if OTP does not match
@@ -51,9 +51,9 @@ class _OtpState extends State<Otp> {
         title: const Text(
           'Otp Verification',
           textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: AppColors.primary),
         ),
-        leading: const BackButton(),
+        leading: const BackButton(color: AppColors.primary),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
