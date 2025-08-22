@@ -55,6 +55,7 @@ class _OtpState extends State<Otp> {
         ),
         leading: const BackButton(color: AppColors.primary),
       ),
+      resizeToAvoidBottomInset: true,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -68,7 +69,7 @@ class _OtpState extends State<Otp> {
                 height: 250,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             const Text(
               'Verify your phone number',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
@@ -81,7 +82,7 @@ class _OtpState extends State<Otp> {
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 25),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: PinCodeTextField(
@@ -118,7 +119,7 @@ class _OtpState extends State<Otp> {
               'Resend OTP',
               style: TextStyle(fontWeight: FontWeight.normal),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 35),
             AbsorbPointer(
               absorbing: !isOtpEntered, // disable taps
               child: Opacity(

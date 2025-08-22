@@ -29,27 +29,34 @@ class Profile extends StatelessWidget {
                 children: [
                   // Profile Header
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const CircleAvatar(
-                        radius: 35,
-                        backgroundImage: AssetImage("assets/images/register.jpeg"),
-                      ),
-                      const SizedBox(width: 15),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            "Rohit Sharma",
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                      Row(
+                        children: [
+                          const CircleAvatar(
+                            radius: 30,
+                            backgroundImage: AssetImage("assets/images/register.jpeg"),
                           ),
-                          Text(
-                            "6388945674",
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                          const SizedBox(width: 15),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                "Rohit Sharma",
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.primary),
+                              ),
+                              Text(
+                                "6388945674",
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.normal),
+                              ),
+                            ],
                           ),
                         ],
-                      )
+                      ),
+                      Icon(Icons.edit,
+                          color: AppColors.primary, size: 20),
                     ],
                   ),
 
@@ -57,10 +64,10 @@ class Profile extends StatelessWidget {
 
                   // Search Bar
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
                     decoration: BoxDecoration(
                       color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(30),
                     ),
                     child: const TextField(
                       decoration: InputDecoration(
@@ -71,7 +78,7 @@ class Profile extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 25),
 
                   // Settings List
                   const SettingsTile(
@@ -95,14 +102,20 @@ class Profile extends StatelessWidget {
                     title: "Browser Settings",
                   ),
                   const SettingsTile(
-                    icon: Icons.shield,
-                    color: Colors.red,
-                    title: "Sensitive Content Control",
-                  ),
-                  const SettingsTile(
                     icon: Icons.lock,
                     color: Colors.blue,
                     title: "Account Privacy",
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Colors.red.withOpacity(0.2),
+                        child: Icon(Icons.delete, color: Colors.red),
+                      ),
+                      const SizedBox(width: 16),
+                      Text('Logout', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                    ],
                   ),
                 ],
               ),
@@ -133,9 +146,9 @@ class SettingsTile extends StatelessWidget {
         backgroundColor: color.withOpacity(0.2),
         child: Icon(icon, color: color),
       ),
-      title: Text(title, style: const TextStyle(fontSize: 16)),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      contentPadding: const EdgeInsets.symmetric(vertical: 4),
+      title: Text(title, style: const TextStyle(fontSize: 15)),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 15),
+      contentPadding: const EdgeInsets.symmetric(vertical: 2),
       onTap: () {},
     );
   }

@@ -27,7 +27,7 @@ class WelcomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 80, 0, 0),
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 70, 0, 0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -40,7 +40,7 @@ class WelcomePage extends StatelessWidget {
                         fit: BoxFit.fitHeight,
                       ),
                     ),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 40),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -58,7 +58,7 @@ class WelcomePage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 40),
                     Text(
                       "Need a Haircut? Book an Appointment",
                       style: Theme.of(context).textTheme.headlineSmall

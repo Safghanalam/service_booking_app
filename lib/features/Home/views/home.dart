@@ -1,4 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:service_booking_app_new/features/Home/views/notification_screen.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../profile/views/profile.dart';
 
@@ -211,7 +214,17 @@ class _HomeState extends State<Home> {
             ),
             Row(
               children: [
-                const Icon(Icons.notifications_none, color: Color(0xFF8A4F4F)),
+                IconButton(
+                  icon: const Icon(Icons.notifications_none, color: Color(0xFF8A4F4F)),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const NotificationScreen(),
+                      ),
+                    );
+                  },
+                ),
                 IconButton(
                   icon: const Icon(Icons.person_outline, color: Color(0xFF8A4F4F)),
                   onPressed: () {
@@ -282,12 +295,18 @@ class _HomeState extends State<Home> {
           ),
           child: Stack(
             children: [
-              Align(
-                alignment: Alignment.bottomRight,
-                child: ClipRRect(
-                  child: Image.asset(
-                    "assets/images/barber.png",
-                    height: 150,
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 22, 0, 0),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Transform.rotate(
+                    angle: math.pi / 7, // rotate -30 degrees (adjust as you like)
+                    child: ClipRRect(
+                      child: Image.asset(
+                        "assets/images/hair.png",
+                        height: 110,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -303,7 +322,7 @@ class _HomeState extends State<Home> {
                           fontSize: 28,
                           fontWeight: FontWeight.bold)),
                   const SizedBox(height: 6),
-                  const Text("Feb 14 - Mar 24",
+                  const Text("Sep 10 - Oct 24",
                       style: TextStyle(color: Colors.white, fontSize: 14)),
                   const SizedBox(height: 16),
                   ElevatedButton(
@@ -318,7 +337,7 @@ class _HomeState extends State<Home> {
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text("Get Offer Now",
+                        Text("Book Haircut Now",
                             style:
                             TextStyle(color: Colors.black, fontSize: 14)),
                         SizedBox(width: 8),
@@ -350,6 +369,27 @@ class _HomeState extends State<Home> {
               _buildHairStyleCard('assets/images/crew-cut1.webp', 'Crew cut'),
               _buildHairStyleCard('assets/images/quiff1.webp', 'Quiff'),
               _buildHairStyleCard('assets/images/undercut1.jpg', 'Undercut'),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 24),
+        const Text("Facials",
+            style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primary)),
+        const SizedBox(height: 12),
+
+        SizedBox(
+          height: 140,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              _buildFacialCard('assets/images/buzz-cut1.webp', 'Buzz cut'),
+              _buildFacialCard('assets/images/crew-cut1.webp', 'Crew cut'),
+              _buildFacialCard('assets/images/quiff1.webp', 'Quiff'),
+              _buildFacialCard('assets/images/undercut1.jpg', 'Undercut'),
             ],
           ),
         ),
@@ -394,6 +434,22 @@ class _HomeState extends State<Home> {
         image: DecorationImage(image: AssetImage(image), fit: BoxFit.cover),
       ),
       alignment: Alignment.bottomLeft,
+      padding: const EdgeInsets.all(8),
+      child: Text(title,
+          style: const TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold)),
+    );
+  }
+
+  static Widget _buildFacialCard(String image, String title) {
+    return Container(
+      width: 140,
+      margin: const EdgeInsets.only(right: 12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(300),
+        image: DecorationImage(image: AssetImage(image), fit: BoxFit.cover),
+      ),
+      alignment: Alignment.bottomCenter,
       padding: const EdgeInsets.all(8),
       child: Text(title,
           style: const TextStyle(
