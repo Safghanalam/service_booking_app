@@ -64,13 +64,13 @@ class _LoginState extends State<Login> {
         leading: const BackButton(color: AppColors.primary),
       ),
       resizeToAvoidBottomInset: true,
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(0, 70, 0, 0),
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 60, 0, 0),
               child: ClipRRect(
                 child: Image.asset(
                   "assets/images/login.png",

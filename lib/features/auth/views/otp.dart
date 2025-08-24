@@ -56,7 +56,7 @@ class _OtpState extends State<Otp> {
         leading: const BackButton(color: AppColors.primary),
       ),
       resizeToAvoidBottomInset: true,
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -69,7 +69,7 @@ class _OtpState extends State<Otp> {
                 height: 250,
               ),
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 10),
             const Text(
               'Verify your phone number',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),

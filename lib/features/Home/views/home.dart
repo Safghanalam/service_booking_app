@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:service_booking_app_new/features/Home/views/notification_screen.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../profile/views/profile.dart';
@@ -15,7 +16,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   int _selectedCategoryIndex = 0;
-
+  int _notificationCount = 1;
+  Future<bool> _onWillPop() async {
+    // Close the app instead of navigating back to login
+    SystemNavigator.pop();
+    return false; // prevent normal pop
+  }
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -24,59 +30,62 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-
-      body: SafeArea(
-        child: _buildPageContent(), // 👈 Switch pages
-      ),
-
-      /// Floating middle button
-      floatingActionButton: FloatingActionButton(
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
         backgroundColor: Colors.white,
-        shape: const CircleBorder(),
-        onPressed: () {
-          setState(() {
-            _selectedIndex = 2;
-          });
-        },
-        child: const Icon(Icons.cut, color: AppColors.primary, size: 28),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
-      /// Bottom navigation
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, -3),
-            ),
-          ],
+      
+        body: SafeArea(
+          child: _buildPageContent(), // 👈 Switch pages
         ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
+      
+        /// Floating middle button
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.white,
+          shape: const CircleBorder(),
+          onPressed: () {
+            setState(() {
+              _selectedIndex = 2;
+            });
+          },
+          child: const Icon(Icons.cut, color: AppColors.primary, size: 28),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      
+        /// Bottom navigation
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: const Offset(0, -3),
+              ),
+            ],
           ),
-          child: BottomAppBar(
-            color: Colors.white,
-            shape: const CircularNotchedRectangle(),
-            child: SizedBox(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildNavItem(Icons.home_outlined, "Home", 0),
-                  _buildNavItem(Icons.map_outlined, "Explore", 1),
-                  const SizedBox(width: 40),
-                  _buildNavItem(Icons.message_outlined, "Message", 3),
-                  _buildNavItem(Icons.person_outline, "Account", 4),
-                ],
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+            child: BottomAppBar(
+              color: Colors.white,
+              shape: const CircularNotchedRectangle(),
+              child: SizedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildNavItem(Icons.home_outlined, "Home", 0),
+                    _buildNavItem(Icons.map_outlined, "Explore", 1),
+                    const SizedBox(width: 40),
+                    _buildNavItem(Icons.message_outlined, "Message", 3),
+                    _buildNavItem(Icons.person_outline, "Account", 4),
+                  ],
+                ),
               ),
             ),
           ),
@@ -214,17 +223,48 @@ class _HomeState extends State<Home> {
             ),
             Row(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.notifications_none, color: Color(0xFF8A4F4F)),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const NotificationScreen(),
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.notifications_none, color: Color(0xFF8A4F4F)),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const NotificationScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    if (_notificationCount > 0)
+                      Positioned(
+                        right: 10,
+                        top: 10,
+                        child: Container(
+                          padding: const EdgeInsets.all(0),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 15,
+                            minHeight: 15,
+                          ),
+                          child: Text(
+                            _notificationCount > 99 ? '99+' : '$_notificationCount',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ),
-                    );
-                  },
+                  ],
                 ),
+
                 IconButton(
                   icon: const Icon(Icons.person_outline, color: Color(0xFF8A4F4F)),
                   onPressed: () {
