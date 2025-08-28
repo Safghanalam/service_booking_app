@@ -45,7 +45,7 @@ class ApiService {
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"phone": phone, "otp": otp}),
+        body: jsonEncode({"phone": "+91" + phone, "code": otp}),
       );
 
       print("📩 Request Body: ${jsonEncode({"phone": phone, "otp": otp})}");
@@ -58,10 +58,13 @@ class ApiService {
         return VerifyOtpResponse.fromJson(data);
       } else if (response.statusCode == 302) {
         // 🚨 Redirect case
-        print("⚠️ Got 302 Redirect. The server is redirecting instead of returning JSON.");
+        print(
+          "⚠️ Got 302 Redirect. The server is redirecting instead of returning JSON.",
+        );
         return VerifyOtpResponse(
           success: false,
-          message: "Server returned redirect instead of OTP verification response",
+          message:
+              "Server returned redirect instead of OTP verification response",
           user: null,
           token: null,
           tokenType: null,
@@ -85,5 +88,4 @@ class ApiService {
       );
     }
   }
-
 }
