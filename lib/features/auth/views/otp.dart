@@ -108,7 +108,7 @@ class _OtpState extends State<Otp> {
 
             // ✅ OTP Input
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: PinCodeTextField(
                 appContext: context,
                 length: 6,
@@ -127,8 +127,8 @@ class _OtpState extends State<Otp> {
                 pinTheme: PinTheme(
                   shape: PinCodeFieldShape.box,
                   borderRadius: BorderRadius.circular(6),
-                  fieldHeight: 50,
-                  fieldWidth: 50,
+                  fieldHeight: 45,
+                  fieldWidth: 45,
                   activeColor: AppColors.primary,
                   selectedColor: AppColors.primary,
                   inactiveColor: Colors.black,
