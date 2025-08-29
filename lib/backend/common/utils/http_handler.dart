@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:service_booking_app_new/core/helpers.dart';
 
 import '../../../app/model/login_model.dart';
 import '../../../app/model/verify_otp_model.dart';
 import 'constant.dart';
 
 class ApiService {
+  final helper = new Helpers();
+
   Future<LoginResponse?> loginUser(String phone) async {
     try {
       final url = Uri.parse("${ApiConstants.baseUrl}${ApiConstants.userLogin}");
@@ -48,13 +51,23 @@ class ApiService {
         body: jsonEncode({"phone": "+91" + phone, "code": otp}),
       );
 
-      print("📩 Request Body: ${jsonEncode({"phone": phone, "otp": otp})}");
-      print("🌍 API URL: $url");
-      print("📡 Response Code: ${response.statusCode}");
-      print("📦 Response Body: ${response.body}");
+      // print("📩 Request Body: ${jsonEncode({"phone": phone, "otp": otp})}");
+      // print("🌍 API URL: $url");
+      // print("📡 Response Code: ${response.statusCode}");
+      // print("📦 Response Body: ${response.body}");
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+
+        await helper.saveSharedPreferences(
+          key: "auth_token",
+          value: data['token'],
+        );
+
+        final userToken = await helper.getSharedPreferences(key: "auth_token");
+
+        print("Final User Token : ${userToken}");
+
         return VerifyOtpResponse.fromJson(data);
       } else if (response.statusCode == 302) {
         // 🚨 Redirect case
