@@ -1,13 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:service_booking_app_new/features/Home/views/home.dart';
 import 'package:service_booking_app_new/shared/widgets/button_primary.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
+import '../../../app/provider/auth_provider.dart';
 import '../../../core/constants/app_colors.dart';
 
+
 class Otp extends StatefulWidget {
-  final String phoneNumber; // ✅ store the phone number
+  final String phoneNumber; // ✅ phone number passed from login
 
   const Otp({super.key, required this.phoneNumber});
 
@@ -17,7 +20,6 @@ class Otp extends StatefulWidget {
 
 class _OtpState extends State<Otp> {
   final TextEditingController otpController = TextEditingController();
-  final String staticOtp = "12345"; // ✅ Static OTP for now
   bool isOtpEntered = false;
 
   @override
@@ -26,18 +28,35 @@ class _OtpState extends State<Otp> {
     super.dispose();
   }
 
-  void _submit() {
-    if (otpController.text == staticOtp) {
-      // ✅ Navigate only if OTP matches
+  Future<void> _submit() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final otp = otpController.text.trim();
+
+    if (otp.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please enter OTP"),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // ✅ Call verifyOtp API
+    await authProvider.verifyOtp(widget.phoneNumber, otp);
+
+    if (authProvider.verifyOtpResponse != null &&
+        authProvider.verifyOtpResponse!.success) {
+      // ✅ OTP verified → Navigate to Home
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const Home()),
       );
     } else {
-      // ❌ Show error if OTP does not match
+      // ❌ Show error message
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Invalid OTP. Please try again."),
+        SnackBar(
+          content: Text(authProvider.verifyOtpResponse?.message ?? "Invalid OTP"),
           backgroundColor: Colors.red,
         ),
       );
@@ -46,12 +65,15 @@ class _OtpState extends State<Otp> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Otp Verification',
           textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: AppColors.primary),
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 20, color: AppColors.primary),
         ),
         leading: const BackButton(color: AppColors.primary),
       ),
@@ -83,15 +105,17 @@ class _OtpState extends State<Otp> {
               ),
             ),
             const SizedBox(height: 25),
+
+            // ✅ OTP Input
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: PinCodeTextField(
                 appContext: context,
-                length: 5,
+                length: 6,
                 controller: otpController,
                 onChanged: (value) {
                   setState(() {
-                    isOtpEntered = value.length == 5;
+                    isOtpEntered = value.length == 6;
                   });
                 },
                 onCompleted: (value) {
@@ -103,8 +127,8 @@ class _OtpState extends State<Otp> {
                 pinTheme: PinTheme(
                   shape: PinCodeFieldShape.box,
                   borderRadius: BorderRadius.circular(6),
-                  fieldHeight: 50,
-                  fieldWidth: 50,
+                  fieldHeight: 45,
+                  fieldWidth: 45,
                   activeColor: AppColors.primary,
                   selectedColor: AppColors.primary,
                   inactiveColor: Colors.black,
@@ -114,19 +138,22 @@ class _OtpState extends State<Otp> {
                 cursorColor: AppColors.primary,
               ),
             ),
+
             const SizedBox(height: 15),
             const Text(
               'Resend OTP',
               style: TextStyle(fontWeight: FontWeight.normal),
             ),
             const SizedBox(height: 35),
+
+            // ✅ Verify OTP Button
             AbsorbPointer(
-              absorbing: !isOtpEntered, // disable taps
+              absorbing: !isOtpEntered || authProvider.isLoading,
               child: Opacity(
-                opacity: isOtpEntered ? 1.0 : 0.5, // grey out when disabled
+                opacity: isOtpEntered ? 1.0 : 0.5,
                 child: ButtonPrimary(
-                  onPressed: _submit, // always non-null
-                  text: "Login",
+                  onPressed: _submit,
+                  text: authProvider.isLoading ? "Verifying..." : "Verify OTP",
                 ),
               ),
             ),

@@ -1,9 +1,11 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart'; // <-- add this
 import 'package:service_booking_app_new/core/constants/app_colors.dart';
 import 'package:service_booking_app_new/features/auth/views/otp.dart';
 import 'package:service_booking_app_new/shared/widgets/button_primary.dart';
+
+import '../../../app/provider/auth_provider.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -35,16 +37,26 @@ class _LoginState extends State<Login> {
     });
   }
 
-  void _submit() {
+  void _submit() async {
     if (phoneController.text.length == 10) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Otp(
-            phoneNumber: phoneController.text,
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      await authProvider.login(phoneController.text);
+
+      if (authProvider.loginResponse != null &&
+          authProvider.loginResponse!.success) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Otp(phoneNumber: phoneController.text),
           ),
-        ),
-      );
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(authProvider.loginResponse?.message ?? "Error"),
+          ),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please enter a valid 10-digit number")),
@@ -59,7 +71,11 @@ class _LoginState extends State<Login> {
         title: const Text(
           'Login',
           textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: AppColors.primary),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: AppColors.primary,
+          ),
         ),
         leading: const BackButton(color: AppColors.primary),
       ),
@@ -104,17 +120,24 @@ class _LoginState extends State<Login> {
                   borderSide: BorderSide(color: AppColors.primary, width: 1.5),
                 ),
                 hintText: "Enter your number",
-                prefix: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      "+91",
-                      style: TextStyle(fontWeight: FontWeight.normal),
-                    ),
-                    const SizedBox(width: 6),
-                    Container(height: 22, width: 1, color: Colors.grey),
-                    const SizedBox(width: 6),
-                  ],
+                prefixIcon: Padding(
+                  padding: const EdgeInsets.only(left: 12, right: 8), // spacing
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        "+91",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(width: 6),
+                      Container(height: 22, width: 2, color: Colors.grey),
+                      const SizedBox(width: 0),
+                    ],
+                  ),
+                ),
+                prefixIconConstraints: const BoxConstraints(
+                  minWidth: 0,
+                  minHeight: 0,
                 ),
               ),
             ),
@@ -126,10 +149,7 @@ class _LoginState extends State<Login> {
               absorbing: !isPhoneEntered,
               child: Opacity(
                 opacity: isPhoneEntered ? 1.0 : 0.5,
-                child: ButtonPrimary(
-                  onPressed: _submit,
-                  text: "Get OTP",
-                ),
+                child: ButtonPrimary(onPressed: _submit, text: "Get OTP"),
               ),
             ),
           ],

@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:service_booking_app_new/features/Home/views/notification_screen.dart';
+import 'package:service_booking_app_new/features/profile/views/bookings.dart';
+import 'package:service_booking_app_new/features/profile/views/personal_information.dart';
+import 'package:service_booking_app_new/features/profile/views/settings.dart';
+import 'package:service_booking_app_new/features/profile/views/support.dart';
 
 import '../../../core/constants/app_colors.dart';
 
@@ -27,84 +32,112 @@ class Profile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Profile Header
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          const CircleAvatar(
-                            radius: 30,
-                            backgroundImage: AssetImage("assets/images/register.jpeg"),
+                      const CircleAvatar(
+                        radius: 30,
+                        backgroundImage: AssetImage("assets/images/register.jpeg"),
+                      ),
+                      const SizedBox(width: 15),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            "Rohit Sharma",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.primary),
                           ),
-                          const SizedBox(width: 15),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                "Rohit Sharma",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.primary),
-                              ),
-                              Text(
-                                "6388945674",
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.normal),
-                              ),
-                            ],
+                          Text(
+                            "6388945674",
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.normal),
                           ),
                         ],
                       ),
-                      Icon(Icons.edit,
-                          color: AppColors.primary, size: 20),
                     ],
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
 
-                  // Search Bar
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: const TextField(
-                      decoration: InputDecoration(
-                        hintText: "Search Settings",
-                        border: InputBorder.none,
-                        suffixIcon: Icon(Icons.search),
-                      ),
-                    ),
+                  Divider(
+                    color: Colors.grey.withOpacity(0.5),      // Line color
+                    thickness: 1,            // Line thickness
                   ),
 
-                  const SizedBox(height: 25),
+                  // // Search Bar
+                  // Container(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 15),
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.grey.shade200,
+                  //     borderRadius: BorderRadius.circular(30),
+                  //   ),
+                  //   child: const TextField(
+                  //     decoration: InputDecoration(
+                  //       hintText: "Search Settings",
+                  //       border: InputBorder.none,
+                  //       suffixIcon: Icon(Icons.search),
+                  //     ),
+                  //   ),
+                  // ),
+
+                  const SizedBox(height: 15),
 
                   // Settings List
-                  const SettingsTile(
+                  SettingsTile(
                     icon: Icons.person,
                     color: Colors.pink,
                     title: "Personal Information",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const PersonalInformation()),
+                      );
+                    },
                   ),
-                  const SettingsTile(
-                    icon: Icons.account_circle,
+                  SettingsTile(
+                    icon: Icons.notifications,
                     color: Colors.amber,
-                    title: "Account Status",
+                    title: "Notifications",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const NotificationScreen()),
+                      );
+                    },
                   ),
-                  const SettingsTile(
-                    icon: Icons.language,
+                  SettingsTile(
+                    icon: Icons.support,
                     color: Colors.purple,
-                    title: "Language",
+                    title: "Support & Help",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Support()),
+                      );
+                    },
+
                   ),
-                  const SettingsTile(
-                    icon: Icons.public,
+                  SettingsTile(
+                    icon: Icons.book,
                     color: Colors.orange,
-                    title: "Browser Settings",
+                    title: "My Bookings",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Bookings()),
+                      );
+                    },
                   ),
-                  const SettingsTile(
-                    icon: Icons.lock,
+                  SettingsTile(
+                    icon: Icons.settings,
                     color: Colors.blue,
-                    title: "Account Privacy",
+                    title: "Settings",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Settings()),
+                      );
+                    },
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -131,12 +164,14 @@ class SettingsTile extends StatelessWidget {
   final IconData icon;
   final Color color;
   final String title;
+  final VoidCallback? onTap;
 
   const SettingsTile({
     super.key,
     required this.icon,
     required this.color,
     required this.title,
+    this.onTap,
   });
 
   @override
@@ -149,7 +184,7 @@ class SettingsTile extends StatelessWidget {
       title: Text(title, style: const TextStyle(fontSize: 15)),
       trailing: const Icon(Icons.arrow_forward_ios, size: 15),
       contentPadding: const EdgeInsets.symmetric(vertical: 2),
-      onTap: () {},
+      onTap: onTap, // <-- use here
     );
   }
 }

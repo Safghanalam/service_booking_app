@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:service_booking_app_new/core/constants/app_colors.dart';
 import 'package:service_booking_app_new/features/auth/views/login.dart';
-import 'package:service_booking_app_new/features/Home/views/home.dart';
 import '../../../shared/widgets/button_primary.dart';
-import 'dart:io'; // For exit(0)
-import 'package:flutter/services.dart'; // For SystemNavigator.pop()
-
+// For exit(0)
+// For SystemNavigator.pop()
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -49,10 +47,10 @@ class WelcomePage extends StatelessWidget {
                             "Welcome to Urban Trim!",
                             style: Theme.of(context).textTheme.displayMedium
                                 ?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.primary,
-                              fontSize: 30,
-                            ),
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.primary,
+                                  fontSize: 30,
+                                ),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -63,9 +61,9 @@ class WelcomePage extends StatelessWidget {
                       "Need a Haircut? Book an Appointment",
                       style: Theme.of(context).textTheme.headlineSmall
                           ?.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.primary,
-                      ),
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primary,
+                          ),
                       textAlign: TextAlign.center,
                     ),
                   ],

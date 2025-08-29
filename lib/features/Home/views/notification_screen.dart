@@ -64,7 +64,7 @@ class NotificationScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
-          'Profile',
+          'Notifications',
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: AppColors.primary),
         ),
