@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:service_booking_app_new/core/helpers.dart';
 import 'package:service_booking_app_new/features/Home/views/notification_screen.dart';
 import 'package:service_booking_app_new/features/profile/views/bookings.dart';
 import 'package:service_booking_app_new/features/profile/views/personal_information.dart';
@@ -7,8 +10,31 @@ import 'package:service_booking_app_new/features/profile/views/support.dart';
 
 import '../../../core/constants/app_colors.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({super.key});
+
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  Map<String, dynamic>? userDataJson;
+
+  Future<void> loadUserData() async {
+    final helper = Helpers();
+    final userData = await helper.getSharedPreferences(key: 'user');
+    if (userData != null) {
+      setState(() {
+        userDataJson = jsonDecode(userData) as Map<String, dynamic>;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +45,11 @@ class Profile extends StatelessWidget {
         title: const Text(
           'Profile',
           textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: AppColors.primary),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: AppColors.primary,
+          ),
         ),
         leading: const BackButton(color: AppColors.primary),
       ),
@@ -34,23 +64,28 @@ class Profile extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const CircleAvatar(
+                      CircleAvatar(
                         radius: 30,
-                        backgroundImage: AssetImage("assets/images/register.jpeg"),
+                        backgroundImage: NetworkImage(userDataJson!['avatar']),
                       ),
                       const SizedBox(width: 15),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
-                            "Rohit Sharma",
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.primary),
+                            userDataJson!['first_name'] ?? '',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primary,
+                            ),
                           ),
                           Text(
-                            "6388945674",
+                            userDataJson!['phone'] ?? '',
                             style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.normal),
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                            ),
                           ),
                         ],
                       ),
@@ -60,8 +95,8 @@ class Profile extends StatelessWidget {
                   const SizedBox(height: 15),
 
                   Divider(
-                    color: Colors.grey.withOpacity(0.5),      // Line color
-                    thickness: 1,            // Line thickness
+                    color: Colors.grey.withOpacity(0.5), // Line color
+                    thickness: 1, // Line thickness
                   ),
 
                   // // Search Bar
@@ -79,7 +114,6 @@ class Profile extends StatelessWidget {
                   //     ),
                   //   ),
                   // ),
-
                   const SizedBox(height: 15),
 
                   // Settings List
@@ -90,7 +124,9 @@ class Profile extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const PersonalInformation()),
+                        MaterialPageRoute(
+                          builder: (context) => const PersonalInformation(),
+                        ),
                       );
                     },
                   ),
@@ -101,7 +137,9 @@ class Profile extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const NotificationScreen()),
+                        MaterialPageRoute(
+                          builder: (context) => const NotificationScreen(),
+                        ),
                       );
                     },
                   ),
@@ -112,10 +150,11 @@ class Profile extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const Support()),
+                        MaterialPageRoute(
+                          builder: (context) => const Support(),
+                        ),
                       );
                     },
-
                   ),
                   SettingsTile(
                     icon: Icons.book,
@@ -124,7 +163,9 @@ class Profile extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const Bookings()),
+                        MaterialPageRoute(
+                          builder: (context) => const Bookings(),
+                        ),
                       );
                     },
                   ),
@@ -135,7 +176,9 @@ class Profile extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const Settings()),
+                        MaterialPageRoute(
+                          builder: (context) => const Settings(),
+                        ),
                       );
                     },
                   ),
@@ -147,7 +190,13 @@ class Profile extends StatelessWidget {
                         child: Icon(Icons.delete, color: Colors.red),
                       ),
                       const SizedBox(width: 16),
-                      Text('Logout', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                      Text(
+                        'Logout',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ],
                   ),
                 ],

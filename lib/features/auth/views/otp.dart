@@ -8,7 +8,6 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import '../../../app/provider/auth_provider.dart';
 import '../../../core/constants/app_colors.dart';
 
-
 class Otp extends StatefulWidget {
   final String phoneNumber; // ✅ phone number passed from login
 
@@ -56,7 +55,9 @@ class _OtpState extends State<Otp> {
       // ❌ Show error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(authProvider.verifyOtpResponse?.message ?? "Invalid OTP"),
+          content: Text(
+            authProvider.verifyOtpResponse?.message ?? "Invalid OTP",
+          ),
           backgroundColor: Colors.red,
         ),
       );
@@ -73,7 +74,10 @@ class _OtpState extends State<Otp> {
           'Otp Verification',
           textAlign: TextAlign.center,
           style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 20, color: AppColors.primary),
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: AppColors.primary,
+          ),
         ),
         leading: const BackButton(color: AppColors.primary),
       ),

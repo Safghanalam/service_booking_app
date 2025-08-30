@@ -58,14 +58,22 @@ class ApiService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-
         await helper.saveSharedPreferences(
           key: "auth_token",
           value: data['token'],
         );
 
-        final userToken = await helper.getSharedPreferences(key: "auth_token");
+        await helper.saveSharedPreferences(
+          key: "user",
+          value: jsonEncode(data['user']),
+        );
 
+        final userToken = await helper.getSharedPreferences(key: "auth_token");
+        final userData = await helper.getSharedPreferences(key: 'user');
+
+        final userDataJson = jsonDecode(userData!);
+
+        print(userDataJson['phone']);
         print("Final User Token : ${userToken}");
 
         return VerifyOtpResponse.fromJson(data);

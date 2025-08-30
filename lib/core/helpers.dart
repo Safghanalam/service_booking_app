@@ -13,7 +13,7 @@ class Helpers {
   Future<String?> getSharedPreferences({required String key}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final data = await prefs.getString(key);
-    return data;
+    return data.toString();
   }
 
   Future<bool> deleteSharedPreferences({required String key}) async {
