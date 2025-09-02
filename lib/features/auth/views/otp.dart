@@ -64,6 +64,7 @@ class _OtpState extends State<Otp> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
@@ -73,93 +74,97 @@ class _OtpState extends State<Otp> {
           'Otp Verification',
           textAlign: TextAlign.center,
           style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 20, color: AppColors.primary),
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: AppColors.primary,
+          ),
         ),
         leading: const BackButton(color: AppColors.primary),
       ),
       resizeToAvoidBottomInset: true,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(80),
-              child: Image.asset(
-                "assets/images/otp.png",
-                width: 250,
-                height: 250,
-              ),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              'Verify your phone number',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                'We have sent the verification code to your phone number',
-                style: TextStyle(fontWeight: FontWeight.normal),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            const SizedBox(height: 25),
-
-            // ✅ OTP Input
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: PinCodeTextField(
-                appContext: context,
-                length: 6,
-                controller: otpController,
-                onChanged: (value) {
-                  setState(() {
-                    isOtpEntered = value.length == 6;
-                  });
-                },
-                onCompleted: (value) {
-                  if (kDebugMode) {
-                    print("Completed: $value");
-                  }
-                },
-                keyboardType: TextInputType.number,
-                pinTheme: PinTheme(
-                  shape: PinCodeFieldShape.box,
-                  borderRadius: BorderRadius.circular(6),
-                  fieldHeight: 45,
-                  fieldWidth: 45,
-                  activeColor: AppColors.primary,
-                  selectedColor: AppColors.primary,
-                  inactiveColor: Colors.black,
-                  disabledColor: Colors.grey,
-                  borderWidth: 1.5,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(80),
+                  child: Image.asset(
+                    "assets/images/otp.png",
+                    width: 250,
+                    height: 250,
+                  ),
                 ),
-                cursorColor: AppColors.primary,
-              ),
-            ),
+                const SizedBox(height: 10),
+                const Text(
+                  'Verify your phone number',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    'We have sent the verification code to your phone number',
+                    style: TextStyle(fontWeight: FontWeight.normal),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 25),
 
-            const SizedBox(height: 15),
-            const Text(
-              'Resend OTP',
-              style: TextStyle(fontWeight: FontWeight.normal),
-            ),
-            const SizedBox(height: 35),
+                // ✅ OTP Input
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: PinCodeTextField(
+                    appContext: context,
+                    length: 6,
+                    controller: otpController,
+                    onChanged: (value) {},
+                    onCompleted: (value) async {
+                      if (kDebugMode) {
+                        print("Completed: $value");
+                      }
+                      await _submit(); // auto verify when OTP complete
+                    },
+                    keyboardType: TextInputType.number,
+                    pinTheme: PinTheme(
+                      shape: PinCodeFieldShape.box,
+                      borderRadius: BorderRadius.circular(6),
+                      fieldHeight: 45,
+                      fieldWidth: 45,
+                      activeColor: AppColors.primary,
+                      selectedColor: AppColors.primary,
+                      inactiveColor: Colors.black,
+                      disabledColor: Colors.grey,
+                      borderWidth: 1.5,
+                    ),
+                    cursorColor: AppColors.primary,
+                  ),
+                ),
 
-            // ✅ Verify OTP Button
-            AbsorbPointer(
-              absorbing: !isOtpEntered || authProvider.isLoading,
-              child: Opacity(
-                opacity: isOtpEntered ? 1.0 : 0.5,
-                child: ButtonPrimary(
-                  onPressed: _submit,
-                  text: authProvider.isLoading ? "Verifying..." : "Verify OTP",
+                const SizedBox(height: 15),
+                const Text(
+                  'Resend OTP',
+                  style: TextStyle(fontWeight: FontWeight.normal),
+                ),
+                const SizedBox(height: 35),
+              ],
+            ),
+          ),
+
+          // ✅ Loader overlay
+          if (authProvider.isLoading)
+            Container(
+              color: Colors.white,
+              child: const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
                 ),
               ),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }
+
 }
