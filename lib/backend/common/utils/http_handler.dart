@@ -51,10 +51,10 @@ class ApiService {
         body: jsonEncode({"phone": "+91" + phone, "code": otp}),
       );
 
-      // print("📩 Request Body: ${jsonEncode({"phone": phone, "otp": otp})}");
-      // print("🌍 API URL: $url");
-      // print("📡 Response Code: ${response.statusCode}");
-      // print("📦 Response Body: ${response.body}");
+      print("📩 Request Body: ${jsonEncode({"phone": phone, "otp": otp})}");
+      print("🌍 API URL: $url");
+      print("📡 Response Code: ${response.statusCode}");
+      print("📦 Response Body: ${response.body}");
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

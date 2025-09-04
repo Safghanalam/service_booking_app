@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:service_booking_app_new/core/helpers.dart';
 import 'package:service_booking_app_new/features/Home/views/notification_screen.dart';
@@ -9,6 +8,7 @@ import 'package:service_booking_app_new/features/profile/views/settings.dart';
 import 'package:service_booking_app_new/features/profile/views/support.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../shared/widgets/listtile.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -38,6 +38,13 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    // show loader until data is fetched
+    if (userDataJson == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -54,186 +61,154 @@ class _ProfileState extends State<Profile> {
         leading: const BackButton(color: AppColors.primary),
       ),
       body: SafeArea(
-        child: Stack(
-          children: [
-            // Main content
-            SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// user info
+              Row(
                 children: [
-                  Row(
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: userDataJson?['avatar'] != null
+                        ? NetworkImage(userDataJson!['avatar'])
+                        : null,
+                    child: userDataJson?['avatar'] == null
+                        ? const Icon(Icons.person, size: 30)
+                        : null,
+                  ),
+                  const SizedBox(width: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage: NetworkImage(userDataJson!['avatar']),
-                      ),
-                      const SizedBox(width: 15),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
                         children: [
                           Text(
-                            userDataJson!['first_name'] ?? '',
+                            userDataJson?['first_name'] ?? 'Verified',
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: AppColors.primary,
                             ),
                           ),
+                          const SizedBox(width: 5),
                           Text(
-                            userDataJson!['phone'] ?? '',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.normal,
+                            userDataJson?['last_name'] ?? 'User',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primary,
                             ),
                           ),
                         ],
                       ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 15),
-
-                  Divider(
-                    color: Colors.grey.withOpacity(0.5), // Line color
-                    thickness: 1, // Line thickness
-                  ),
-
-                  // // Search Bar
-                  // Container(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 15),
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.grey.shade200,
-                  //     borderRadius: BorderRadius.circular(30),
-                  //   ),
-                  //   child: const TextField(
-                  //     decoration: InputDecoration(
-                  //       hintText: "Search Settings",
-                  //       border: InputBorder.none,
-                  //       suffixIcon: Icon(Icons.search),
-                  //     ),
-                  //   ),
-                  // ),
-                  const SizedBox(height: 15),
-
-                  // Settings List
-                  SettingsTile(
-                    icon: Icons.person,
-                    color: Colors.pink,
-                    title: "Personal Information",
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const PersonalInformation(),
-                        ),
-                      );
-                    },
-                  ),
-                  SettingsTile(
-                    icon: Icons.notifications,
-                    color: Colors.amber,
-                    title: "Notifications",
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const NotificationScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  SettingsTile(
-                    icon: Icons.support,
-                    color: Colors.purple,
-                    title: "Support & Help",
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Support(),
-                        ),
-                      );
-                    },
-                  ),
-                  SettingsTile(
-                    icon: Icons.book,
-                    color: Colors.orange,
-                    title: "My Bookings",
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Bookings(),
-                        ),
-                      );
-                    },
-                  ),
-                  SettingsTile(
-                    icon: Icons.settings,
-                    color: Colors.blue,
-                    title: "Settings",
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Settings(),
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: Colors.red.withOpacity(0.2),
-                        child: Icon(Icons.delete, color: Colors.red),
-                      ),
-                      const SizedBox(width: 16),
                       Text(
-                        'Logout',
+                        userDataJson?['phone'] ?? 'No phone available',
                         style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
                         ),
                       ),
                     ],
                   ),
                 ],
               ),
-            ),
-          ],
+
+              const SizedBox(height: 15),
+              Divider(color: Colors.grey.withOpacity(0.5), thickness: 1),
+
+              const SizedBox(height: 15),
+
+              /// settings list
+              SettingsTile(
+                icon: Icons.person,
+                color: Colors.pink,
+                title: "Personal Information",
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PersonalInformation(),
+                    ),
+                  );
+                },
+              ),
+              SettingsTile(
+                icon: Icons.notifications,
+                color: Colors.amber,
+                title: "Notifications",
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const NotificationScreen(),
+                    ),
+                  );
+                },
+              ),
+              SettingsTile(
+                icon: Icons.support,
+                color: Colors.purple,
+                title: "Support & Help",
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Support(),
+                    ),
+                  );
+                },
+              ),
+              SettingsTile(
+                icon: Icons.book,
+                color: Colors.orange,
+                title: "My Bookings",
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Bookings(),
+                    ),
+                  );
+                },
+              ),
+              SettingsTile(
+                icon: Icons.settings,
+                color: Colors.blue,
+                title: "Settings",
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Settings(),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 10),
+
+              /// logout
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.red.withOpacity(0.2),
+                    child: const Icon(Icons.delete, color: Colors.red),
+                  ),
+                  const SizedBox(width: 16),
+                  const Text(
+                    'Logout',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
-    );
-  }
-}
-
-class SettingsTile extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final String title;
-  final VoidCallback? onTap;
-
-  const SettingsTile({
-    super.key,
-    required this.icon,
-    required this.color,
-    required this.title,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: color.withOpacity(0.2),
-        child: Icon(icon, color: color),
-      ),
-      title: Text(title, style: const TextStyle(fontSize: 15)),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 15),
-      contentPadding: const EdgeInsets.symmetric(vertical: 2),
-      onTap: onTap, // <-- use here
     );
   }
 }
