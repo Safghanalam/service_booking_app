@@ -109,4 +109,51 @@ class ApiService {
       );
     }
   }
+
+  Future<bool> logoutAll() async {
+    try {
+      final url = Uri.parse("${ApiConstants.baseUrl}${ApiConstants.logoutAll}");
+      final token = await helper.getSharedPreferences(key: "auth_token");
+      if (token == null || token.isEmpty) {
+        print("⚠️ logoutAll: no token found in shared preferences. Clearing local auth and returning true.");
+        await helper.clearAuthData(); // or delete keys individually
+        return true;
+      }
+
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      print("🌍 Logout API URL: $url");
+      print("📡 Response Code: ${response.statusCode}");
+      print("📦 Response Body: ${response.body}");
+
+      // If server returned OK, treat as success and clear local store
+      if (response.statusCode == 200) {
+        await helper.clearAuthData();
+        return true;
+      }
+
+      // If token invalid / already expired (401/403) — clear local auth anyway
+      if (response.statusCode == 401 || response.statusCode == 403) {
+        print("⚠️ Token invalid/expired — clearing local auth.");
+        await helper.clearAuthData();
+        return true;
+      }
+
+      // For any other error - don't remove local token automatically, but you can choose otherwise
+      print("❌ logoutAll failed with status ${response.statusCode}");
+      return false;
+    } catch (e) {
+      print("❌ logoutAll exception: $e");
+      // In case of exception we might choose to clear local auth so user is forced to re-login:
+      // await helper.clearAuthData();
+      return false;
+    }
+  }
+
 }

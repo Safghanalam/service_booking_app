@@ -4,4 +4,5 @@ class ApiConstants {
   // Endpoints
   static const String userLogin  = "/login";
   static const String verifyOtp  = "/verify-otp";
+  static const String logoutAll  = "/logout-all";
 }

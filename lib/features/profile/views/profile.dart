@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:service_booking_app_new/core/helpers.dart';
 import 'package:service_booking_app_new/features/Home/views/notification_screen.dart';
+import 'package:service_booking_app_new/features/auth/views/login.dart';
 import 'package:service_booking_app_new/features/profile/views/bookings.dart';
 import 'package:service_booking_app_new/features/profile/views/personal_information.dart';
 import 'package:service_booking_app_new/features/profile/views/settings.dart';
 import 'package:service_booking_app_new/features/profile/views/support.dart';
 
+import '../../../app/provider/auth_provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../shared/widgets/listtile.dart';
 
@@ -36,6 +39,45 @@ class _ProfileState extends State<Profile> {
     loadUserData();
   }
 
+  Future<void> _handleLogout(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Confirm Logout'),
+        content: const Text(
+          'Are you sure you want to log out from all devices?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Logout'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    final authProvider = context.read<AuthProvider>();
+    final success = await authProvider.logout();
+
+    if (success) {
+      // Navigate to login screen and clear back stack
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const Login()),
+            (route) => false,
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Logout failed. Please try again.')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // show loader until data is fetched
@@ -44,6 +86,8 @@ class _ProfileState extends State<Profile> {
         body: Center(child: CircularProgressIndicator()),
       );
     }
+
+    final authProvider = context.watch<AuthProvider>();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -189,21 +233,34 @@ class _ProfileState extends State<Profile> {
               const SizedBox(height: 10),
 
               /// logout
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.red.withOpacity(0.2),
-                    child: const Icon(Icons.delete, color: Colors.red),
-                  ),
-                  const SizedBox(width: 16),
-                  const Text(
-                    'Logout',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+              InkWell(
+                onTap: authProvider.isLoading
+                    ? null
+                    : () => _handleLogout(context),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.red.withOpacity(0.2),
+                      child: authProvider.isLoading
+                          ? const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.red,
+                        ),
+                      )
+                          : const Icon(Icons.logout, color: Colors.red),
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 16),
+                    const Text(
+                      'Logout',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

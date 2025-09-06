@@ -51,7 +51,7 @@ class _HomeState extends State<Home> {
           child: const Icon(Icons.cut, color: AppColors.primary, size: 28),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      
+
         /// Bottom navigation
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
@@ -82,8 +82,8 @@ class _HomeState extends State<Home> {
                     _buildNavItem(Icons.home_outlined, "Home", 0),
                     _buildNavItem(Icons.map_outlined, "Explore", 1),
                     const SizedBox(width: 40),
-                    _buildNavItem(Icons.message_outlined, "Message", 3),
-                    _buildNavItem(Icons.person_outline, "Account", 4),
+                    _buildNavItem(Icons.calendar_month_outlined, "Book", 3),
+                    _buildNavItem(Icons.people_outline, "Staffs", 4),
                   ],
                 ),
               ),

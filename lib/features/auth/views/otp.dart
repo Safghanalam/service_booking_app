@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:service_booking_app_new/features/Home/views/home.dart';
-import 'package:service_booking_app_new/shared/widgets/button_primary.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 import '../../../app/provider/auth_provider.dart';
@@ -23,54 +22,58 @@ class _OtpState extends State<Otp> {
 
   @override
   void dispose() {
-    otpController.dispose();
     super.dispose();
   }
 
   Future<void> _submit() async {
+    if (!mounted) return; // ✅ prevent running after dispose
+
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final otp = otpController.text.trim();
 
     if (otp.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please enter OTP"),
-          backgroundColor: Colors.red,
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Please enter OTP"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
       return;
     }
 
-    // ✅ Call verifyOtp API
-    await authProvider.verifyOtp(widget.phoneNumber, otp);
+    final success = await authProvider.verifyOtp(widget.phoneNumber, otp);
 
-    if (authProvider.verifyOtpResponse != null &&
-        authProvider.verifyOtpResponse!.success) {
-      // ✅ OTP verified → Navigate to Home
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const Home()),
-      );
+    if (success) {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Home()),
+        );
+      }
     } else {
-      // ❌ Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            authProvider.verifyOtpResponse?.message ?? "Invalid OTP",
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              authProvider.verifyOtpResponse?.message ?? "Invalid OTP",
+            ),
+            backgroundColor: Colors.red,
           ),
-          backgroundColor: Colors.red,
-        ),
-      );
+        );
+      }
     }
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: const Text(
           'Otp Verification',
           textAlign: TextAlign.center,
@@ -125,6 +128,7 @@ class _OtpState extends State<Otp> {
                       if (kDebugMode) {
                         print("Completed: $value");
                       }
+                      if (!mounted) return; // ✅ prevent calling after dispose
                       await _submit(); // auto verify when OTP complete
                     },
                     keyboardType: TextInputType.number,
@@ -153,13 +157,15 @@ class _OtpState extends State<Otp> {
             ),
           ),
 
-          // ✅ Loader overlay
+          // ✅ Loader overlay covers whole screen including AppBar
           if (authProvider.isLoading)
-            Container(
-              color: Colors.white,
-              child: const Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+            Positioned.fill(
+              child: Container(
+                color: Colors.white,
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                  ),
                 ),
               ),
             ),
@@ -167,5 +173,4 @@ class _OtpState extends State<Otp> {
       ),
     );
   }
-
 }

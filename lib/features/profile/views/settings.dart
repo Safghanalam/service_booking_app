@@ -72,6 +72,20 @@ class _SettingsState extends State<Settings> {
                   );
                 },
               ),
+              Divider(color: Colors.grey.withOpacity(0.5), thickness: 1),
+              SettingsTile(
+                icon: Icons.privacy_tip,
+                color: Colors.blue,
+                title: "Privacy & Data",
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const NotificationScreen(),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),
