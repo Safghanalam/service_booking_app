@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:service_booking_app_new/features/welcome/views/welcome_page.dart';
 
+import '../../../core/helpers.dart';
+import '../../Home/views/home.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -19,21 +22,38 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   }
 
   void _startAnimation() {
-    // Start scale animation after short delay
-    Future.delayed(Duration(milliseconds: 200), () {
-      setState(() {
-        _scale = 1.0;
-      });
+    Future.delayed(const Duration(milliseconds: 200), () {
+      if (mounted) {
+        setState(() {
+          _scale = 1.0;
+        });
+      }
     });
   }
 
   Future<void> _navigateToNext() async {
+    final helper = Helpers();
+
+    // Keep splash visible for 2 seconds
     await Future.delayed(const Duration(seconds: 2));
+
     if (!mounted) return;
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const WelcomePage()),
-    );
+
+    final token = await helper.getSharedPreferences(key: "auth_token");
+
+    if (token != null && token.isNotEmpty) {
+      // ✅ Token exists → go to Home
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const Home()),
+      );
+    } else {
+      // ❌ No token → go to Welcome/Login flow
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const WelcomePage()),
+      );
+    }
   }
 
   @override
