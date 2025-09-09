@@ -17,6 +17,9 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   int _selectedCategoryIndex = 0;
   int _notificationCount = 1;
+  int _wishlistCount = 2; // example
+  int _cartCount = 4;     // example
+
   Future<bool> _onWillPop() async {
     // Close the app instead of navigating back to login
     SystemNavigator.pop();
@@ -33,6 +36,7 @@ class _HomeState extends State<Home> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
       
         body: SafeArea(
@@ -80,16 +84,17 @@ class _HomeState extends State<Home> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildNavItem(Icons.home_outlined, "Home", 0),
-                    _buildNavItem(Icons.map_outlined, "Explore", 1),
+                    _buildNavItem(Icons.explore_outlined, "Explore", 1),
                     const SizedBox(width: 40),
-                    _buildNavItem(Icons.calendar_month_outlined, "Book", 3),
-                    _buildNavItem(Icons.people_outline, "Staffs", 4),
+                    _buildNavItem(Icons.favorite_border, "Wishlist", 3, count: 2, badgeTop: -4, badgeRight: 5),
+                    _buildNavItem(Icons.shopping_cart_outlined, "Cart", 4, count: 5, badgeTop: -4, badgeRight: -3),
                   ],
                 ),
               ),
             ),
           ),
         ),
+
       ),
     );
   }
@@ -223,50 +228,60 @@ class _HomeState extends State<Home> {
             ),
             Row(
               children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.notifications_none, color: Color(0xFF8A4F4F)),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const NotificationScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    if (_notificationCount > 0)
-                      Positioned(
-                        right: 10,
-                        top: 10,
-                        child: Container(
-                          padding: const EdgeInsets.all(0),
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          constraints: const BoxConstraints(
-                            minWidth: 15,
-                            minHeight: 15,
-                          ),
-                          child: Text(
-                            _notificationCount > 99 ? '99+' : '$_notificationCount',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
+                SizedBox(
+                  width: 30, // 👈 control exact width
+                  height: 30,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    alignment: Alignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.notifications_none, color: Color(0xFF8A4F4F), size: 24),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const NotificationScreen(),
                             ),
-                            textAlign: TextAlign.center,
+                          );
+                        },
+                      ),
+                      if (_notificationCount > 0)
+                        Positioned(
+                          right: 2, // 👈 negative offset keeps badge inside tighter
+                          top: 1,
+                          child: Container(
+                            padding: const EdgeInsets.all(0),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 15,
+                              minHeight: 15,
+                            ),
+                            child: Text(
+                              _notificationCount > 99 ? '99+' : '$_notificationCount',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
 
+                /// Profile icon
                 IconButton(
-                  icon: const Icon(Icons.person_outline, color: Color(0xFF8A4F4F)),
+                  icon: const Icon(Icons.person_outline, color: Color(0xFF8A4F4F), size: 24),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -277,7 +292,8 @@ class _HomeState extends State<Home> {
                   },
                 ),
               ],
-            ),
+            )
+
           ],
         ),
 
@@ -508,25 +524,67 @@ class _HomeState extends State<Home> {
   }
 
   /// Bottom Nav Item
-  Widget _buildNavItem(IconData icon, String label, int index) {
+  /// Bottom Nav Item with optional badge
+  Widget _buildNavItem(
+      IconData icon,
+      String label,
+      int index, {
+        int count = 0,
+        double badgeTop = -2,   // 👈 default position
+        double badgeRight = -2, // 👈 default position
+      }) {
     final isSelected = _selectedIndex == index;
+
     return InkWell(
       onTap: () => _onItemTapped(index),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          Icon(icon,
-              size: 24,
-              color: isSelected ? const Color(0xFF8A4F4F) : AppColors.primary),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: isSelected ? const Color(0xFF8A4F4F) : AppColors.primary,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 24,
+                color: isSelected ? const Color(0xFF8A4F4F) : AppColors.primary,
+              ),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: isSelected ? const Color(0xFF8A4F4F) : AppColors.primary,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
+            ],
           ),
+
+          if (count > 0)
+            Positioned(
+              right: badgeRight,
+              top: badgeTop,
+              child: Container(
+                padding: const EdgeInsets.all(0),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                constraints: const BoxConstraints(
+                  minWidth: 15,
+                  minHeight: 15,
+                ),
+                child: Text(
+                  count > 99 ? '99+' : '$count',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
         ],
       ),
     );
