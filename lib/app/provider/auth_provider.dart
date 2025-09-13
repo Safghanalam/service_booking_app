@@ -10,6 +10,12 @@ class AuthProvider extends ChangeNotifier {
   LoginResponse? loginResponse;
   VerifyOtpResponse? verifyOtpResponse;
 
+  // new helper to control loader from UI
+  void setLoading(bool value) {
+    isLoading = value;
+    notifyListeners();
+  }
+
   /// Login with phone number
   Future<void> login(String phone) async {
     isLoading = true;
@@ -23,18 +29,20 @@ class AuthProvider extends ChangeNotifier {
 
   /// Verify OTP and store token + user
   Future<bool> verifyOtp(String phone, String otp) async {
+    // start loader
     isLoading = true;
     notifyListeners();
 
     verifyOtpResponse = await _apiService.verifyOtp(phone, otp);
 
+    // if success: keep isLoading = true so UI can navigate while loader is visible
     if (verifyOtpResponse != null && verifyOtpResponse!.success) {
-      // ✅ OTP verified successfully
-      isLoading = false;
-      notifyListeners();
+      // NOTE: do NOT set isLoading = false here
+      // (ApiService already saved token/user into shared prefs)
+      notifyListeners(); // keep it true for now
       return true;
     } else {
-      // ❌ OTP failed
+      // failure: stop loader and return false
       isLoading = false;
       notifyListeners();
       return false;

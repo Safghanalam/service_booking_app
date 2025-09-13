@@ -45,34 +45,34 @@ class _SettingsState extends State<Settings> {
             children: [
 
               /// settings list
-              SettingsTile(
-                icon: Icons.language,
-                color: Colors.pink,
-                title: "Language",
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const PersonalInformation(),
-                    ),
-                  );
-                },
-              ),
-              Divider(color: Colors.grey.withOpacity(0.5), thickness: 1),
-              SettingsTile(
-                icon: Icons.light_mode,
-                color: Colors.amber,
-                title: "Theme mode",
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const NotificationScreen(),
-                    ),
-                  );
-                },
-              ),
-              Divider(color: Colors.grey.withOpacity(0.5), thickness: 1),
+              // SettingsTile(
+              //   icon: Icons.language,
+              //   color: Colors.pink,
+              //   title: "Language",
+              //   onTap: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => const PersonalInformation(),
+              //       ),
+              //     );
+              //   },
+              // ),
+              // Divider(color: Colors.grey.withOpacity(0.5), thickness: 1),
+              // SettingsTile(
+              //   icon: Icons.light_mode,
+              //   color: Colors.amber,
+              //   title: "Theme mode",
+              //   onTap: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => const NotificationScreen(),
+              //       ),
+              //     );
+              //   },
+              // ),
+              // Divider(color: Colors.grey.withOpacity(0.5), thickness: 1),
               SettingsTile(
                 icon: Icons.privacy_tip,
                 color: Colors.blue,

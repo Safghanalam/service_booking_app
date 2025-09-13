@@ -21,12 +21,11 @@ class BookingCard extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(30),
           onTap: onTap,
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.1),
@@ -36,20 +35,31 @@ class BookingCard extends StatelessWidget {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              padding: const EdgeInsetsDirectional.fromSTEB(15, 18, 15, 20),
+              child: Column(
                 children: [
-                  // Left side (icon + day/date)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        service,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const Icon(Icons.arrow_forward_ios, size: 15),
+                    ],
+                  ),
+                  SizedBox(height: 15),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CircleAvatar(
-                        backgroundColor: Colors.purpleAccent.withOpacity(0.2),
+                        backgroundColor: Color(0xFF8A4F4F).withOpacity(0.2),
                         child: const Icon(
                           Icons.calendar_month,
-                          color: Colors.purpleAccent,
+                          color: Color(0xFF8A4F4F),
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -63,6 +73,7 @@ class BookingCard extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
+                          const SizedBox(height: 3),
                           Text(
                             date,
                             style: const TextStyle(
@@ -74,22 +85,9 @@ class BookingCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  // Right side (service + arrow)
-                  Row(
-                    children: [
-                      Text(
-                        service,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      const Icon(Icons.arrow_forward_ios, size: 15),
-                    ],
-                  ),
                 ],
               ),
+
             ),
           ),
         ),

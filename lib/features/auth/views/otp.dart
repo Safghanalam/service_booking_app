@@ -26,7 +26,7 @@ class _OtpState extends State<Otp> {
   }
 
   Future<void> _submit() async {
-    if (!mounted) return; // ✅ prevent running after dispose
+    if (!mounted) return;
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final otp = otpController.text.trim();
@@ -43,16 +43,25 @@ class _OtpState extends State<Otp> {
       return;
     }
 
+    // call verifyOtp (provider will set isLoading = true)
     final success = await authProvider.verifyOtp(widget.phoneNumber, otp);
 
+    if (!mounted) return;
+
     if (success) {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Home()),
-        );
-      }
+      // Navigate immediately while loader is still visible.
+      // pushAndRemoveUntil clears stack so user cannot go back to OTP.
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const Home()),
+            (route) => false,
+      );
+
+      // Now hide the loader (provider instance is still valid)
+      authProvider.setLoading(false);
     } else {
+      // verifyOtp already set isLoading = false on failure, but we keep safety here
+      authProvider.setLoading(false);
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -65,6 +74,7 @@ class _OtpState extends State<Otp> {
       }
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
